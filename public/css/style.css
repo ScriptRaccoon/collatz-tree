@@ -1,0 +1,194 @@
+/* variables for lines */
+
+:root {
+    --line-width: 2px;
+    --line-color: brown;
+    --node-border-color: orangered;
+    --content-border-color: royalblue;
+}
+
+/* global stuff */
+
+body {
+    font-family: monospace;
+    font-size: 20px;
+}
+
+main {
+    display: inline-block;
+    padding: 20px;
+}
+
+/* menu */
+
+menu {
+    padding: 5px 10px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+menu section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+input[type="number"] {
+    width: 50px;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 5px 15px;
+    border: 1px solid #aaa;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* node */
+
+.node {
+    width: 100%;
+    position: relative;
+}
+
+.node > .content {
+    text-align: center;
+    padding: 15px;
+    position: relative;
+}
+
+.node > .childrenContainer {
+    display: flex;
+}
+
+/* vertical line above and below the node */
+
+.node > .content::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(
+        var(--line-color),
+        20%,
+        var(--line-color),
+        20%,
+        transparent,
+        80%,
+        transparent,
+        80%,
+        var(--line-color)
+    );
+    width: var(--line-width);
+    height: 100%;
+}
+
+/* remove line above in the first node */
+
+.node.first > .content::after {
+    background: linear-gradient(
+        transparent,
+        80%,
+        transparent,
+        80%,
+        var(--line-color)
+    );
+}
+
+/* remove line below leaves */
+
+.node.leaf > .content::after {
+    background: linear-gradient(
+        var(--line-color),
+        20%,
+        var(--line-color),
+        20%,
+        transparent
+    );
+}
+
+/* handle special case when depth is 0 */
+
+.node.first.leaf > .content::after {
+    display: none;
+}
+
+/* horizontal line above left children */
+
+.node:first-child:not(:only-child) > .content::before {
+    content: "";
+    position: absolute;
+    width: 50%;
+    top: 0;
+    left: 50%;
+    height: var(--line-width);
+    background-color: var(--line-color);
+}
+
+/* horizontal line above right children */
+
+.node:nth-child(2) > .content::before {
+    content: "";
+    position: absolute;
+    width: 50%;
+    top: 0;
+    left: 0;
+    height: var(--line-width);
+    background-color: var(--line-color);
+}
+
+/* arrows upwards */
+
+.node:not(.leaf)::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 41px;
+    transform: translateX(-50%);
+    border-right: 4px solid transparent;
+    border-bottom: 8px solid var(--line-color);
+    border-left: 4px solid transparent;
+}
+
+/* styles for the number */
+
+.node > .content > span {
+    border: 1px solid #888;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+/* styles to show DOM structure */
+
+.showDOM .node {
+    width: auto;
+    border: 1px solid var(--node-border-color);
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.showDOM .node::before {
+    display: none;
+}
+
+.showDOM .content {
+    width: auto;
+    border: 1px solid var(--content-border-color);
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.showDOM .content > span {
+    border: none;
+}
+
+.showDOM .content::before,
+.showDOM .content::after {
+    display: none;
+}
